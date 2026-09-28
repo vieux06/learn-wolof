@@ -11,7 +11,9 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+}));
 app.use(express.json());
 
 // Connexion à MongoDB
@@ -29,28 +31,37 @@ const connectDB = async () => {
   console.log('MongoDB connecté');
 };
 
-connectDB().then(async () => {
-  if (process.env.NODE_ENV === 'development') {
-    const { seedData } = require('./seed');
-    await seedData();
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    if (process.env.NODE_ENV === 'development') {
+      const { seedData } = require('./seed');
+      await seedData();
+    }
+
+    // Routes
+    app.get('/', (req, res) => {
+      res.send('API is running...');
+    });
+
+    // Routes d'authentification
+    app.use('/api/auth', require('./routes/auth'));
+
+    // Routes des unités
+    app.use('/api/units', require('./routes/unit'));
+    // Routes des leçons
+    app.use('/api/lessons', require('./routes/lesson'));
+    // Routes de progression
+    app.use('/api/progress', require('./routes/progress'));
+
+    // Démarrage du serveur après connexion à la base de données
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.error('Impossible de démarrer le serveur:', err);
+    process.exit(1);
   }
-}).catch(err => console.log(err));
+};
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
-// Routes d'authentification
-app.use('/api/auth', require('./routes/auth'));
-
-// Routes des unités
-app.use('/api/units', require('./routes/unit'));
-// Routes des leçons
-app.use('/api/lessons', require('./routes/lesson'));
-// Routes de progression
-app.use('/api/progress', require('./routes/progress'));
-
-// Démarrage du serveur
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+startServer();
