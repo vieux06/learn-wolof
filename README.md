@@ -33,7 +33,7 @@ learn-wolof/
 ## Installation et démarrage
 
 ### Prérequis
-- Node.js (version 14 ou supérieure)
+- Node.js (version 20.19 ou supérieure, ou 22.12 ou supérieure)
 - npm ou yarn
 
 ### Backend
