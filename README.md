@@ -1,5 +1,7 @@
 # Application d'apprentissage du wolof
 
+[Découvrir l'application](https://learn-wolof.vercel.app/)
+
 Cette application web moderne permet d'apprendre le wolof, principalement destinée aux personnes qui ne parlent pas encore wolof et qui souhaitent apprendre progressivement la langue.
 
 ## Fonctionnalités
