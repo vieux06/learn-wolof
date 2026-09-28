@@ -35,10 +35,8 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    if (process.env.NODE_ENV === 'development') {
-      const { seedData } = require('./seed');
-      await seedData();
-    }
+    const { seedData } = require('./seed');
+    await seedData();
 
     // Routes
     app.get('/', (req, res) => {
